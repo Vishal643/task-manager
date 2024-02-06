@@ -35,8 +35,7 @@ const getAllTasks = async (req, res) => {
 			);
 		}
 	}
-
-	res.status(200).send({ error: false, data: filteredTasks });
+	res.status(200).json(filteredTasks);
 };
 
 const getAllWithPriority = async (req, res) => {
@@ -48,7 +47,7 @@ const getAllWithPriority = async (req, res) => {
 
 	const filteredTasks = tasks.filter((task) => task.priority === level);
 
-	res.status(200).send({ error: false, data: filteredTasks });
+	res.status(200).json(filteredTasks);
 };
 
 const getTaskById = async (req, res) => {
@@ -59,7 +58,7 @@ const getTaskById = async (req, res) => {
 			.status(404)
 			.send({ message: `Task with id : ${id} not found`, error: true });
 	}
-	res.status(200).send({ error: false, data: task });
+	res.status(200).json(task);
 };
 
 const createTask = async (req, res) => {
@@ -91,7 +90,7 @@ const createTask = async (req, res) => {
 		encoding: 'utf8',
 	});
 
-	res.status(201).send({ error: false, data: newTask });
+	res.status(201).json(newTask);
 };
 
 const updateTask = async (req, res) => {
@@ -106,29 +105,23 @@ const updateTask = async (req, res) => {
 			.send({ message: `Task with id : ${id} not found`, error: true });
 	}
 
-	// check for the fields that are being provided and update only them
-	if (data.hasOwnProperty('title') && data.title !== '') {
-		taskToBeUpdated.title = data.title;
+	const { error, message } = validateTask(data);
+
+	if (error) {
+		return res.status(400).send({
+			message,
+			error,
+		});
 	}
-	if (data.hasOwnProperty('description') && data.description !== '') {
-		taskToBeUpdated.description = data.description;
-	}
-	if (data.hasOwnProperty('completed') && typeof data.completed === 'boolean') {
-		taskToBeUpdated.completed = data.completed;
-	}
-	if (data.hasOwnProperty('priority') && data.priority !== '') {
-		if (!['low', 'medium', 'high'].includes(data.priority)) {
-			res.status(400).send({
-				error: true,
-				message: 'Invalid priority level must be one of low, medium or high',
-			});
-		}
-		taskToBeUpdated.priority = data.priority;
-	}
+
+	const newTask = {
+		id: taskToBeUpdated.id,
+		...data,
+	};
 
 	const updatedTasks = tasks.map((task) => {
 		if (task.id === parseInt(id)) {
-			return { ...task, ...taskToBeUpdated };
+			return { ...task, ...newTask };
 		}
 		return task;
 	});
@@ -138,7 +131,7 @@ const updateTask = async (req, res) => {
 		encoding: 'utf8',
 	});
 
-	res.status(201).send({ error: false, data: updatedTasks });
+	res.status(200).json(updatedTasks);
 };
 
 const deleteTask = async (req, res) => {
@@ -159,7 +152,7 @@ const deleteTask = async (req, res) => {
 		encoding: 'utf8',
 	});
 
-	res.status(200).send({ error: false, data: task });
+	res.status(200).json(task);
 };
 
 module.exports = {

@@ -7,7 +7,7 @@ const port = 3000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const baseRoute = '/api/v1';
+const baseRoute = '';
 
 // health check route
 app.get(`${baseRoute}/health`, (req, res) => {
