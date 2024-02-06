@@ -82,7 +82,7 @@ const createTask = async (req, res) => {
 		id: tasks.length + 1,
 		...data,
 		createdAt: new Date().toISOString(),
-		priority: 'low',
+		priority: data.priority ? data.priority : 'low',
 	};
 	const newTasks = [...tasks, newTask];
 
@@ -115,6 +115,15 @@ const updateTask = async (req, res) => {
 	}
 	if (data.hasOwnProperty('completed') && typeof data.completed === 'boolean') {
 		taskToBeUpdated.completed = data.completed;
+	}
+	if (data.hasOwnProperty('priority') && data.priority !== '') {
+		if (!['low', 'medium', 'high'].includes(data.priority)) {
+			res.status(400).send({
+				error: true,
+				message: 'Invalid priority level must be one of low, medium or high',
+			});
+		}
+		taskToBeUpdated.priority = data.priority;
 	}
 
 	const updatedTasks = tasks.map((task) => {

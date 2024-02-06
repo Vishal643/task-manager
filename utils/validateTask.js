@@ -14,6 +14,12 @@ const validateTask = (task) => {
 			message: 'Completed is required and should be a boolean',
 		};
 	}
+	if (task.priority && !['low', 'medium', 'high'].includes(task.priority)) {
+		return {
+			error: true,
+			message: 'Priority must be one of low, medium or high',
+		};
+	}
 	return { error: false };
 };
 

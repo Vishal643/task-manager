@@ -26,7 +26,7 @@ router.get('/tasks', getAllTasks);
 router.get('/tasks/:id', getTaskById);
 
 /**
- * @route GET /api/v1/tasks/priority:level
+ * @route GET /api/v1/tasks/priority/:level
  * @desc Get all tasks with a certain priority level
  * @access Public
  */
