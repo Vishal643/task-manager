@@ -105,23 +105,34 @@ const updateTask = async (req, res) => {
 			.send({ message: `Task with id : ${id} not found`, error: true });
 	}
 
-	const { error, message } = validateTask(data);
-
-	if (error) {
-		return res.status(400).send({
-			message,
-			error,
-		});
+	// check for the fields that are being provided and update only them
+	if (data.hasOwnProperty('title') && data.title !== '') {
+		taskToBeUpdated.title = data.title;
+	}
+	if (data.hasOwnProperty('description') && data.description !== '') {
+		taskToBeUpdated.description = data.description;
+	}
+	if (data.hasOwnProperty('completed') && typeof data.completed === 'boolean') {
+		taskToBeUpdated.completed = data.completed;
+	} else if (data.hasOwnProperty('completed') && data.completed !== 'boolean') {
+		return res
+			.status(400)
+			.send({ message: `Completed field must be a boolean`, error: true });
 	}
 
-	const newTask = {
-		id: taskToBeUpdated.id,
-		...data,
-	};
+	if (data.hasOwnProperty('priority') && data.priority !== '') {
+		if (!['low', 'medium', 'high'].includes(data.priority)) {
+			res.status(400).send({
+				error: true,
+				message: 'Invalid priority level must be one of low, medium or high',
+			});
+		}
+		taskToBeUpdated.priority = data.priority;
+	}
 
 	const updatedTasks = tasks.map((task) => {
 		if (task.id === parseInt(id)) {
-			return { ...task, ...newTask };
+			return { ...task, ...taskToBeUpdated };
 		}
 		return task;
 	});
@@ -131,7 +142,7 @@ const updateTask = async (req, res) => {
 		encoding: 'utf8',
 	});
 
-	res.status(200).json(updatedTasks);
+	res.status(200).json(taskToBeUpdated);
 };
 
 const deleteTask = async (req, res) => {
