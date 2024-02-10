@@ -1,6 +1,15 @@
 - This is a Task App that allows below operations:
+  - Steps to run:
+    1. Clone the repository
+    2. Run `npm install`
+    3. Run `npm run dev`
+    4. Open Postman and hit the below routes
+
+  - To run the tests
+    - Run `npm run test`
+
   - Add a Task
-    - Route : `http://localhost:3000/task`
+    - Route : `http://localhost:3000/tasks`
     - Method : `POST`
     - Body : 
       ```json
@@ -13,31 +22,31 @@
       ```
 
   - List all Tasks
-    - Route : `http://localhost:3000/task`
+    - Route : `http://localhost:3000/tasks`
     - Method : `GET`
     
     - List all Tasks that are Done/Undone
-        - Route : `http://localhost:3000/task?completed=true`
+        - Route : `http://localhost:3000/tasks?completed=true`
         - completed : true or false
 
     - Filter tasks based on created date 
-        - Route :  `http://localhost:3000/task?sortByDate=asc`
+        - Route :  `http://localhost:3000/tasks?sortByDate=asc`
         - sortByDate Takes two values `asc` or `desc`
     
     - If you want both the above filters together
-        - Route : `http://localhost:3000/task?completed=true&sortByDate=asc`
+        - Route : `http://localhost:3000/tasks?completed=true&sortByDate=asc`
         - completed : true or false
         - sortByDate Takes two values `asc` or `desc`
 
 
   - Filter tasks based on priority  
-    - Route : `http://localhost:3000/task/priority/:level`
+    - Route : `http://localhost:3000/tasks/priority/:level`
     - Method : `GET`
     - level : Low, Medium, High
 
     
   - Update Task
-    - Route : `http://localhost:3000/task/:id`
+    - Route : `http://localhost:3000/tasks/:id`
     - Method : `PUT`
     - Body : 
       ```json
@@ -55,5 +64,5 @@
 
 
   - Delete a Task
-    - Route : `http://localhost:3000/task/:id`
+    - Route : `http://localhost:3000/tasks/:id`
     - Method : `DELETE`
